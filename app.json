@@ -1,26 +1,33 @@
-{
-  "name": "ASITHA-MD",
-  "description": "Javascript WhatsApp bot made by ASITHA",
-  "logo": "https://telegra.ph/file/dddf7ee9971497aa050ef.jpg",
-  "keywords": ["bot"],
-  "success_url": "/",
+name: Node.js CI
 
-  "env": {
-    "SESSION_ID": {
-      "description": "Put the session-id here.",
-      "required": true
-    },  
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
-    "MONGODB": {
-      "description": "Put your mongodb url..",
-      "required": true
-    }
-},
+jobs:
+  build:
 
-     "buildpacks": [
-        {
-            "url": "https://github.com/heroku/heroku-buildpack-nodejs.git"
-        }
-     ],
-  "stack": "heroku-24"
-}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Start application
+      run: npm start
